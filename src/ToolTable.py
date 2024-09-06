@@ -25,6 +25,8 @@ class ToolTableFrame(ctk.CTkFrame):
       self.master.set_page(nextPage)
       # 取得した画像をレイアウト構成に基づいて表示する
       self.master.set_img(self.master.pdfImg[nextPage])
+      # 取得した問題をレイアウト構成に基づいて表示する
+      self.master.set_sentence(self.master.wordList[nextPage])
 
   def goBackPage(self):
     # 現在の表示しているpdfのページを取得
@@ -35,3 +37,5 @@ class ToolTableFrame(ctk.CTkFrame):
       self.master.set_page(backPage)
       # 取得した画像をレイアウト構成に基づいて表示する
       self.master.set_img(self.master.pdfImg[backPage])
+      # 取得した問題をレイアウト構成に基づいて表示する
+      self.master.set_sentence(self.master.wordList[backPage])

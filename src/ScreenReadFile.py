@@ -1,10 +1,11 @@
 import customtkinter as ctk
 from tkinter import filedialog
 import tkinter as tk
-from ScreenFunction import pdfFunc
+import ScreenFunction as sf
 import ScreenConfig as sc
 import ScreenShowSentence as ss
 import ScreenShowImage as si
+from concurrent.futures import ProcessPoolExecutor
 
 class ReadFileFrame(ctk.CTkFrame):
   def __init__(self,master, **kwargs):
@@ -41,17 +42,23 @@ class ReadFileFrame(ctk.CTkFrame):
   
   def open_file_decision(self):
     # 選択したファイルのパスを元にファイルを開く
-    pdfController = pdfFunc()
+    pdfController = sf.pdfFunc()
     path = self.file_path_entry.get()
     if len(path) != 0:
-      # 取得したパスを元にPDFを開く
-      self.master.document_len = pdfController.openPDF(path)
-      # 取得したpdfを画像に変換する
-      imgList = pdfController.PDF_to_Image()
+      # pdfから画像に変換する処理を並列で行う
+      mulitiProcess_resultTuple = pdfController.multiprocess_pdf_to_image(path) 
+      mulitiProcess_resultImgList, mulitiProcess_resultTextList = mulitiProcess_resultTuple    
+      #pdfの総ページ数を管理側のdocument_lenに格納
+      self.master.document_len = pdfController.document_len 
       # 作成したリストをセットする
-      self.master.pdfImg = imgList
+      self.master.pdfImg = mulitiProcess_resultImgList
       # 取得した画像をレイアウト構成に基づいて表示する
-      self.master.set_img(imgList[0])
-      # 取得した画像から文字を抽出し、レイアウト構成に基づいて表示する
-      text = pdfController.extractWord(imgList[0])
-      self.master.set_sentence(text)
+      self.master.set_img(mulitiProcess_resultImgList[0])
+      # # 取得した画像から文字を抽出し、レイアウト構成に基づいて表示する
+      # wordList = pdfController.extractWord(mulitiProcess_resultList)
+      # 作成した問題集をセットする
+      self.master.wordList = mulitiProcess_resultTextList
+      # 取得した問題集から1ページ目の文字を表示する
+      self.master.set_sentence(mulitiProcess_resultTextList[0])
+
+  
