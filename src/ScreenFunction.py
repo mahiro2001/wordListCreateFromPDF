@@ -13,9 +13,14 @@ class pdfFunc:
   def openPDF(self,path):
     self.document = fitz.open(path)
     self.document_len = len(self.document)
-  
-  def PDF_to_Image(self,page):
-    return Image.open(io.BytesIO(self.document.get_page_pixmap(page,dpi=500).tobytes("png")))
+    return self.document_len
+
+  # PDFを読みこんだタイミングで全てのページを読みこみ、リストで保存する処理
+  def PDF_to_Image(self):
+    imgList = []
+    for page in range(self.document_len):
+      imgList.append(Image.open(io.BytesIO(self.document.get_page_pixmap(page,dpi=500).tobytes("png"))))
+    return imgList
   
   # 画像から文字を抽出するための処理Ⅿ
   def extractWord(self,img):
