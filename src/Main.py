@@ -1,8 +1,8 @@
 import ScreenConfig
 
-
-screenConfig = ScreenConfig.Application()
-screenConfig.mainloop()
+if __name__ == "__main__":
+  screenConfig = ScreenConfig.Application()
+  screenConfig.mainloop()
 
 # # ScreenConfigクラスのオブジェクトの作成
 # screenConfig = ScreenConfig("CreateWordList")

@@ -27,6 +27,7 @@ class Application(ctk.CTk):
     self.page = 0
     self.pdfImg = None
     self.document_len = None
+    self.wordList = None
     self.grid_columnconfigure(0,weight=1)
     self.grid_columnconfigure(1,weight=1)
     self.grid_columnconfigure(2,weight=1)
