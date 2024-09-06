@@ -46,18 +46,19 @@ class ReadFileFrame(ctk.CTkFrame):
     path = self.file_path_entry.get()
     if len(path) != 0:
       # pdfから画像に変換する処理を並列で行う
-      mulitiProcess_resultList = pdfController.multiprocess_pdf_to_image(path)     
+      mulitiProcess_resultTuple = pdfController.multiprocess_pdf_to_image(path) 
+      mulitiProcess_resultImgList, mulitiProcess_resultTextList = mulitiProcess_resultTuple    
       #pdfの総ページ数を管理側のdocument_lenに格納
       self.master.document_len = pdfController.document_len 
       # 作成したリストをセットする
-      self.master.pdfImg = mulitiProcess_resultList
+      self.master.pdfImg = mulitiProcess_resultImgList
       # 取得した画像をレイアウト構成に基づいて表示する
-      self.master.set_img(mulitiProcess_resultList[0])
-      # 取得した画像から文字を抽出し、レイアウト構成に基づいて表示する
-      wordList = pdfController.extractWord(mulitiProcess_resultList)
+      self.master.set_img(mulitiProcess_resultImgList[0])
+      # # 取得した画像から文字を抽出し、レイアウト構成に基づいて表示する
+      # wordList = pdfController.extractWord(mulitiProcess_resultList)
       # 作成した問題集をセットする
-      self.master.wordList = wordList
+      self.master.wordList = mulitiProcess_resultTextList
       # 取得した問題集から1ページ目の文字を表示する
-      self.master.set_sentence(wordList[0])
+      self.master.set_sentence(mulitiProcess_resultTextList[0])
 
   

@@ -14,14 +14,22 @@ def PDF_to_Image_topFunc(rangeLen,path):
   start,end = rangeLen
   # ページ番号と画像データをまとめたリストをさらにまとめるリスト[[ページ番号,画像データ],[ページ番号,画像データ]]
   imgList = []
+  # 取得した画像データから文字を抽出し、格納するためのリスト
+  wordList = []
   # 指定した範囲のpdfを画像に変換し、ページ数と画像データを紐づけ、リストに追加する
   for page in range(start,end):
     # pdfのページ情報と画像のバイナリデータを紐づける為のリスト[ページ番号,画像データ]
     pdfList = []
+    textList = []
     pdfList.append(page)
-    pdfList.append(Image.open(io.BytesIO(document.get_page_pixmap(page,dpi=500).tobytes("png"))))
+    textList.append(page)
+    img = Image.open(io.BytesIO(document.get_page_pixmap(page,dpi=500).tobytes("png")))
+    text = extractWord(img)
+    pdfList.append(img)
+    textList.append(text)
     imgList.append(pdfList)
-  return imgList
+    wordList.append(textList)
+  return imgList,wordList
 
 # 【非同期処理】
 # pdfファイルデータを取得するための処理
@@ -53,19 +61,46 @@ def division_page_top(document_len):
 
 # 【非同期処理関連】
 # 画像データが格納されているリストを結合するための処理
-def union_List(imgList):
-  allList = []
-  for index in range(len(imgList)):
-    allList += imgList[index].result()
-  return allList
+def union_List(resList):
+  imgAllList = []
+  textAllList = []
+  for index in range(len(resList)):
+    imgList, textList = resList[index].result()
+    imgAllList += imgList
+    textAllList += textList
+  return imgAllList,textAllList
 
-# 【非同期関連】
+# 【非同期処理関連】
 # 抽出した画像データをページ番号と合わせてまとめているリストのページ番号を取り除いたリストを作成するための処理
-def extract_PageNum_AllList(allList):
-  imgList = []
-  for imageInfo in allList:
-    imgList.append(imageInfo[1])
-  return imgList
+def extract_PageNum_AllList(resTuple):
+  imgList,textList = resTuple
+  reImgList = []
+  reTextList = []
+
+  for imageInfo in imgList:
+    reImgList.append(imageInfo[1])
+  
+  for textInfo in textList:
+    reTextList.append(textInfo[1])
+  
+  return reImgList,reTextList 
+
+
+
+# 【非同期処理関連】
+# 画像から文字を抽出するための処理Ⅿ
+def extractWord(img):
+  tools = pyocr.get_available_tools()
+  tool = tools[0]
+  imgL = img.convert("L")
+  text = tool.image_to_string(
+        imgL,
+        lang="jpn",
+        builder=pyocr.builders.TextBuilder()
+  )
+  return text
+
+
 
 # ==================================================================================================================
 # ==================================================================================================================
@@ -75,20 +110,7 @@ def extract_PageNum_AllList(allList):
 class pdfFunc():
   def __init__(self):
     self.document_len = None
-  # 画像から文字を抽出するための処理Ⅿ
-  def extractWord(self,imgList):
-    tools = pyocr.get_available_tools()
-    tool = tools[0]
-    wordList = []
-    for img in imgList:
-      imgL = img.convert("L")
-      text = tool.image_to_string(
-            imgL,
-            lang="jpn",
-            builder=pyocr.builders.TextBuilder()
-      )
-      wordList.append(text)
-    return wordList
+  
   
   # 【非同期処理関連】
   # 非同期処理をするメソッドを呼び出すための処理
@@ -103,5 +125,5 @@ class pdfFunc():
     # 非同期処理、PDF_to_Image_topFuncメソッドを非同期で指定したページごとで処理を行う
     with ProcessPoolExecutor(max_workers=2) as executor:
       for divisionInfo in divisionList:
-        resList.append(executor.submit(PDF_to_Image_topFunc,divisionInfo,path))
+        resList.append(executor.submit(PDF_to_Image_topFunc,divisionInfo,path))   
     return extract_PageNum_AllList(union_List(resList))
