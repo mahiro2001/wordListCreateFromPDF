@@ -50,8 +50,8 @@ class Application(ctk.CTk):
 
   # 画像が選択、確定された場合の処理
   # テキストボックスの書き込みを可能にする
-  def set_sentence(self):
-    self.showSentence.set_sentence_config()
+  def set_sentence(self,text):
+    self.showSentence.set_sentence_config(text)
 
 
 

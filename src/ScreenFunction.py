@@ -17,16 +17,13 @@ class pdfFunc:
   def PDF_to_Image(self,page):
     return Image.open(io.BytesIO(self.document.get_page_pixmap(page,dpi=500).tobytes("png")))
   
-  # def extractWord(self,img):
-  #   tokenizer = Tokenizer()
-  #   tools = pyocr.get_available_tools()
-  #   tool = tools[0]
-  #   text = tool.image_to_string(
-  #         img,
-  #         lang="jpn",
-  #         builder=pyocr.builders.TextBuilder()
-  #   )
-
-  #   for token in tokenizer.tokenize(text):
-  #     if token.part_of_speech.startswith("名詞"):
-  #       print(token.surface)
+  # 画像から文字を抽出するための処理Ⅿ
+  def extractWord(self,img):
+    tools = pyocr.get_available_tools()
+    tool = tools[0]
+    text = tool.image_to_string(
+          img,
+          lang="jpn",
+          builder=pyocr.builders.TextBuilder()
+    )
+    return text
