@@ -9,6 +9,7 @@ import customtkinter as ctk
 import ScreenReadFile as sr
 import ScreenShowSentence as ss
 import ScreenShowImage as si
+import ToolTable as tt
 
 FONT_TYPE = "meiryo"
 
@@ -40,6 +41,8 @@ class Application(ctk.CTk):
     self.showImage.grid(row=1,column=2,columnspan=2,padx=(2,20),sticky="news")
     self.showSentence = ss.ShowSentenceFrame(master=self)
     self.showSentence.grid(row=1,column=0,columnspan=2, padx=(20,2),sticky="news")
+    self.toolFrame = tt.ToolTableFrame(master=self)
+    self.toolFrame.grid(row=2,column=3,columnspan=4,padx=(0,20),pady=10,sticky="news")
     
 
  # 画像が選択、確定された場合の処理

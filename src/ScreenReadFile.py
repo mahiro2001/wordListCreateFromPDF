@@ -15,6 +15,7 @@ class ReadFileFrame(ctk.CTkFrame):
     self.grid_columnconfigure(0, weight=1)  # ファイルパスエントリーの列が拡張する
     self.grid_columnconfigure(1, weight=1)  # ボタンの列は固定
     self.grid_columnconfigure(2, weight=1)
+    self.grid_rowconfigure(0,weight=1)
     
     # ファイルパス表示用のエントリー
     self.file_path_entry = ctk.CTkEntry(self, placeholder_text="File Path",width=600)
