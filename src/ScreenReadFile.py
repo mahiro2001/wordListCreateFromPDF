@@ -45,11 +45,13 @@ class ReadFileFrame(ctk.CTkFrame):
     path = self.file_path_entry.get()
     if len(path) != 0:
       # 取得したパスを元にPDFを開く
-      pdfController.openPDF(path)
+      self.master.document_len = pdfController.openPDF(path)
       # 取得したpdfを画像に変換する
-      img = pdfController.PDF_to_Image(0)
+      imgList = pdfController.PDF_to_Image()
+      # 作成したリストをセットする
+      self.master.pdfImg = imgList
       # 取得した画像をレイアウト構成に基づいて表示する
-      self.master.set_img(img)
+      self.master.set_img(imgList[0])
       # 取得した画像から文字を抽出し、レイアウト構成に基づいて表示する
-      text = pdfController.extractWord(img)
+      text = pdfController.extractWord(imgList[0])
       self.master.set_sentence(text)

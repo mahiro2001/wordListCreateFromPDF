@@ -23,6 +23,10 @@ class Application(ctk.CTk):
     self.title("WordListCreateFromPDF")
     self.image = None
     self.height = self.winfo_screenheight()
+    # PDF情報の保持フィールド
+    self.page = 0
+    self.pdfImg = None
+    self.document_len = None
     self.grid_columnconfigure(0,weight=1)
     self.grid_columnconfigure(1,weight=1)
     self.grid_columnconfigure(2,weight=1)
@@ -56,10 +60,10 @@ class Application(ctk.CTk):
   def set_sentence(self,text):
     self.showSentence.set_sentence_config(text)
 
+  def set_page(self,page):
+    self.page = page
 
-
-
-
+    
 
 
 
