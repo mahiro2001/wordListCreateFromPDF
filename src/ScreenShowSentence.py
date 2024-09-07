@@ -1,7 +1,4 @@
 import customtkinter as ctk
-from tkinter import filedialog
-import tkinter as tk
-from ScreenFunction import pdfFunc
 
 class ShowSentenceFrame(ctk.CTkFrame):
   def __init__(self,master, **kwargs):
@@ -42,14 +39,9 @@ class ShowSentenceFrame(ctk.CTkFrame):
       self.sentence.tag_add("highLight",markerStart,markerEnd)
       self.sentence.tag_config("highLight",background="yellow",foreground="black")
       markerTuple = (nowPage,markerStart,markerEnd)
-      print(markerTuple)
-      print(self.sentence.get(markerStart,markerEnd))
-      # positionList = []
-      # wordList = []
       if self.check_Unique_positionList(markerTuple):
         self.master.master.wordMarkerPosition.append(markerTuple)
         self.master.master.wordMarkerList.append(self.sentence.get(markerStart,markerEnd))
-      print(self.master.master.wordMarkerPosition,self.master.master.wordMarkerList)
       
   # 既に登録されているポジションかを確認する為の処理
   # False：重複している、True：重複していない

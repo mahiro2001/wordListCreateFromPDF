@@ -1,8 +1,4 @@
 import customtkinter as ctk
-from tkinter import filedialog
-import tkinter as tk
-from ScreenFunction import pdfFunc
-from PIL import Image 
 
 class ShowImageFrame(ctk.CTkFrame):
   def __init__(self,master, **kwargs):
