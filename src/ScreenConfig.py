@@ -17,17 +17,30 @@ class Application(ctk.CTk):
   def __init__(self):
     super().__init__()
 
+    # ウィンドウの書記設定
     self.fonts = (FONT_TYPE, 15,"bold")
     self.geometry("1000x600+0+0")
     self.minsize(1000,600)
     self.title("WordListCreateFromPDF")
     self.image = None
     self.height = self.winfo_screenheight()
+
     # PDF情報の保持フィールド
+    # アプリ上で表示しているページ数を保持
     self.page = 0
+    # PDFを画像変換した情報を保持
     self.pdfImg = None
+    # PDFの総ページ数を格納するための変数
     self.document_len = None
+    # PDFから抽出した文章をまとめているリスト
     self.wordList = None
+    # 抽出された文章中からマーカーが引かれた位置をまとめるリスト
+    self.wordMarkerPosition = []
+    # 抽出された文字をまとめるリスト
+    self.wordMarkerList = []
+
+
+    # レイアウトの構成設定
     self.grid_columnconfigure(0,weight=1)
     self.grid_columnconfigure(1,weight=1)
     self.grid_columnconfigure(2,weight=1)
@@ -64,7 +77,8 @@ class Application(ctk.CTk):
   def set_page(self,page):
     self.page = page
 
-    
+  def get_Marker(self,nowPage):
+    self.showSentence.getMarker_Word(nowPage)
 
 
 

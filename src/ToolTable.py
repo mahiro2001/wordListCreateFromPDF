@@ -19,6 +19,8 @@ class ToolTableFrame(ctk.CTkFrame):
   def goNextPage(self):
     # 現在の表示しているpdfのページを取得
     nowPage = self.master.page
+    # マーカーが引かれた文字とその位置を保持するための処理
+    self.master.get_Marker(nowPage)
     # pdfの最大ページ数より現在のページが小さければ処理を行う
     if self.master.document_len - 1 > nowPage:
       nextPage = nowPage + 1
@@ -27,10 +29,13 @@ class ToolTableFrame(ctk.CTkFrame):
       self.master.set_img(self.master.pdfImg[nextPage])
       # 取得した問題をレイアウト構成に基づいて表示する
       self.master.set_sentence(self.master.wordList[nextPage])
+      
 
   def goBackPage(self):
     # 現在の表示しているpdfのページを取得
     nowPage = self.master.page
+    # マーカーが引かれた文字とその位置を保持するための処理
+    self.master.get_Marker(nowPage)
     # pdfの最小のページ数より現在のページ数が大きければ処理を行う
     if nowPage > 0:
       backPage = nowPage - 1
