@@ -6,6 +6,8 @@ import ScreenConfig as sc
 import ScreenShowSentence as ss
 import ScreenShowImage as si
 from concurrent.futures import ProcessPoolExecutor
+import csv
+import os
 
 class ReadFileFrame(ctk.CTkFrame):
   def __init__(self,master, **kwargs):
@@ -31,12 +33,13 @@ class ReadFileFrame(ctk.CTkFrame):
     self.another_button = ctk.CTkButton(self, text="開く",font=("meiryo", 12,"bold"),command=self.open_file_decision)
     self.another_button.grid(row=0, column=2)  # エクスプローラーの隣に配置
 
-    self.csv_output_button = ctk.CTkButton(self, text="単語リストを作成",font=("meiryo", 12,"bold"))
+    # csvファイルを出力するためのボタン
+    self.csv_output_button = ctk.CTkButton(self, text="単語リストを作成",font=("meiryo", 12,"bold"),command=self.output_CSVFile)
     self.csv_output_button.grid(row=0, column=3,padx=(5,0))
 
   def open_file_explorer(self):
     # ファイルダイアログを開いて選択したファイルのパスを入力ボックスに設定
-    file_path = filedialog.askopenfilename()
+    file_path = filedialog.askopenfilename(title="PDFファイルを選択")
     if file_path:
         self.file_path_entry.delete(0, tk.END)  # 既存のテキストを削除
         self.file_path_entry.insert(0, file_path)  # 新しいファイルパスを挿入
@@ -62,4 +65,15 @@ class ReadFileFrame(ctk.CTkFrame):
       # 取得した問題集から1ページ目の文字を表示する
       self.master.set_sentence(mulitiProcess_resultTextList[0])
 
+  # CSVファイルを出力するための処理
+  def output_CSVFile(self):
+    file_path = os.path.normpath(filedialog.askdirectory(title="保存先を選択"))
+    if len(file_path) != 0:
+      file_path = os.path.join(file_path,"createWordList.csv")
+      data = self.master.wordMarkerList
+      # 2次元配列に変換
+      data = [[word] for word in data]
+      with open(file_path, mode="w", newline="", encoding="Shift-JIS") as file:
+        writer = csv.writer(file)
+        writer.writerows(data)
   
