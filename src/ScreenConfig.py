@@ -83,9 +83,6 @@ class Application(ctk.CTk):
   def set_page(self,page):
     self.page = page
 
-  def get_Marker(self,nowPage):
-    self.pdfFrame.sentence.getMarker_Word(nowPage)
-
   def reconstruction_Marker(self,recPage):
     self.pdfFrame.sentence.highLight_Marker_reconstruction(recPage)
 

@@ -19,8 +19,6 @@ class ScreenTransitionFrame(ctk.CTkFrame):
   def goNextPage(self):
     # 現在の表示しているpdfのページを取得
     nowPage = self.master.master.page
-    # マーカーが引かれた文字とその位置を保持するための処理
-    self.master.master.get_Marker(nowPage)
     # pdfの最大ページ数より現在のページが小さければ処理を行う
     if self.master.master.document_len - 1 > nowPage:
       nextPage = nowPage + 1
@@ -36,8 +34,6 @@ class ScreenTransitionFrame(ctk.CTkFrame):
   def goBackPage(self):
     # 現在の表示しているpdfのページを取得
     nowPage = self.master.master.page
-    # マーカーが引かれた文字とその位置を保持するための処理
-    self.master.master.get_Marker(nowPage)
     # pdfの最小のページ数より現在のページ数が大きければ処理を行う
     if nowPage > 0:
       backPage = nowPage - 1

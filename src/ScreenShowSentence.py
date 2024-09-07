@@ -15,6 +15,7 @@ class ShowSentenceFrame(ctk.CTkFrame):
     self.sentence = ctk.CTkTextbox(self,wrap="word",font=("meiryo",13,"bold"),fg_color="#242424",text_color="black",state="disabled",padx=0,pady=0)
     self.sentence.grid(row=0, column=0, padx=7.5, pady=7.5,sticky="news")
     self.sentence.bind("<ButtonRelease-1>",self.highLight_Marker_Select)
+    self.sentence.bind("<Button-1>",self.highLight_Marker_remove)
 
   # 取得した文字をテキストボックスにセットするための処理
   def set_sentence_config(self,exText):
@@ -35,36 +36,25 @@ class ShowSentenceFrame(ctk.CTkFrame):
   # テキストにマーカーを引くための処理
   def highLight_Marker_Select(self,event):
     if self.master.master.get_Option() == "マーカー" and self.sentence.tag_ranges(ctk.SEL):
+      nowPage = self.master.master.page
       markerStart = self.sentence.index(ctk.SEL_FIRST)
       markerEnd = self.sentence.index(ctk.SEL_LAST)
       self.sentence.tag_add("highLight",markerStart,markerEnd)
       self.sentence.tag_config("highLight",background="yellow",foreground="black")
-
-  # 画面移動をした際にマーカー箇所の情報（テキストとその位置）を取得するための処理
-  def getMarker_Word(self,nowPage):
-    markerList = self.sentence.tag_ranges("highLight")
-    positionList = []
-    wordList = []
-    for index in range(0,len(markerList),2):
-      markerTuple = (nowPage,markerList[index:index+2][0],markerList[index:index+2][1])
+      markerTuple = (nowPage,markerStart,markerEnd)
+      print(markerTuple)
+      print(self.sentence.get(markerStart,markerEnd))
+      # positionList = []
+      # wordList = []
       if self.check_Unique_positionList(markerTuple):
-        positionList.append(markerTuple)
-        wordList.append(self.sentence.get(markerList[index:index+2][0],markerList[index:index+2][1]))
-    if len(positionList) != 0:
-      # wordMarkerPosiionに格納されるデータ例： [[(0,3.19,3.20),(0,4.1,4.5)],[],[(1,3.19,3.20),(1,4.1,4.5)]]
-      self.master.master.wordMarkerPosition.append(positionList)
-    if len(wordList) != 0:
-      self.master.master.wordMarkerList.append(wordList)
-    
-    # 以下、デバッグ用  
-    # print(self.master.wordMarkerPosition)
-    # print(self.master.wordMarkerList)
-    
+        self.master.master.wordMarkerPosition.append(markerTuple)
+        self.master.master.wordMarkerList.append(self.sentence.get(markerStart,markerEnd))
+      print(self.master.master.wordMarkerPosition,self.master.master.wordMarkerList)
+      
   # 既に登録されているポジションかを確認する為の処理
   # False：重複している、True：重複していない
   def check_Unique_positionList(self,markerTuple):
-    for markerData in self.master.master.wordMarkerPosition:
-      for positionData in markerData:
+    for positionData in self.master.master.wordMarkerPosition:
         if positionData[0] == markerTuple[0] and positionData[1] == markerTuple[1] and positionData[2] == markerTuple[2]:
           return False
     return True
@@ -72,11 +62,22 @@ class ShowSentenceFrame(ctk.CTkFrame):
   # ページ移動をした際、以前にマーカーをしていた個所にハイライト（背景色）をつける
   def highLight_Marker_reconstruction(self,recPage):
     for recData in self.master.master.wordMarkerPosition:
-      if len(recData) != 0 and recData[0][0] == recPage:
-        for positionData in recData:
-          markerStart = positionData[1]
-          markerEnd = positionData[2]
-          self.sentence.tag_add("highLight",markerStart,markerEnd)
-          self.sentence.tag_config("highLight",background="yellow",foreground="black")
+      if recData[0] == recPage:
+        markerStart = str(recData[1])
+        markerEnd = str(recData[2])
+        self.sentence.tag_add("highLight",markerStart,markerEnd)
+        self.sentence.tag_config("highLight",background="yellow",foreground="black")
     
-      
+  # マーカーされた箇所を取り消すための処理
+  def highLight_Marker_remove(self,event):
+    if self.master.master.get_Option() == "消しゴム":
+      nowPage = self.master.master.page
+      selectPosition = self.sentence.index(f"@{event.x},{event.y}")
+      for positionData in self.master.master.wordMarkerPosition:
+          mark_Start_Num = str(positionData[1]).split(".")
+          mark_End_Num = str(positionData[2]).split(".")
+          selectNum = str(selectPosition).split(".")
+          if positionData[0] == nowPage and (float(mark_Start_Num[0]) <= float(selectNum[0]) and float(mark_Start_Num[1]) <= float(selectNum[1])) and (float(mark_End_Num[0]) >= float(selectNum[0]) and float(mark_End_Num[1]) >= float(selectNum[1])):
+            self.master.master.wordMarkerPosition.remove((nowPage,positionData[1],positionData[2]))
+            self.master.master.wordMarkerList.remove(self.sentence.get(positionData[1],positionData[2]))
+            self.sentence.tag_remove("highLight",positionData[1],positionData[2])
