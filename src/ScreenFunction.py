@@ -3,7 +3,6 @@ import fitz
 from PIL import Image
 import io
 import pyocr
-from janome.tokenizer import Tokenizer
 
 # 【非同期処理】
 # 指定したページのpdfを読みこみ、pdfを画像に変換後、リストで保存する処理

@@ -1,7 +1,4 @@
 import customtkinter as ctk
-from tkinter import filedialog
-import tkinter as tk
-from ScreenFunction import pdfFunc
 
 class ScreenTransitionFrame(ctk.CTkFrame):
   def __init__(self,master, **kwargs):

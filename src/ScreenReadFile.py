@@ -2,10 +2,6 @@ import customtkinter as ctk
 from tkinter import filedialog
 import tkinter as tk
 import ScreenFunction as sf
-import ScreenConfig as sc
-import ScreenShowSentence as ss
-import ScreenShowImage as si
-from concurrent.futures import ProcessPoolExecutor
 import csv
 import os
 
@@ -49,6 +45,8 @@ class ReadFileFrame(ctk.CTkFrame):
     pdfController = sf.pdfFunc()
     path = self.file_path_entry.get()
     if len(path) != 0:
+      if self.master.document_len != 0:
+        self.master.initData()
       # pdfから画像に変換する処理を並列で行う
       mulitiProcess_resultTuple = pdfController.multiprocess_pdf_to_image(path) 
       mulitiProcess_resultImgList, mulitiProcess_resultTextList = mulitiProcess_resultTuple    
@@ -89,6 +87,17 @@ class ReadFileFrame(ctk.CTkFrame):
         with open(file_path, mode="w", newline="", encoding="Shift-JIS") as file:
           writer = csv.writer(file)
           writer.writerows(data)
+        error_dialog = ctk.CTkToplevel()
+        error_dialog.grab_set()
+        error_dialog.focus_set()
+        error_dialog.title("警告")
+        error_dialog.geometry("800x400+500+400")
+        error_dialog.attributes("-topmost",True)
+        error_dialog.grid_columnconfigure(0, weight=1)
+        error_dialog.grid_rowconfigure(0,weight=1)
+        errorText = ctk.CTkLabel(error_dialog,text="ダウンロードが完了しました！",font=("meiryo", 12,"bold"),text_color="Green")
+        errorText.grid(row=0,column=0)
+        self.master.wait_window(error_dialog)
     else:
       error_dialog = ctk.CTkToplevel()
       error_dialog.grab_set()

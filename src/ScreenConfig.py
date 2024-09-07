@@ -1,16 +1,5 @@
-#import PySimpleGUI as sg
-import pyocr.builders
-from ScreenFunction import pdfFunc
-from PIL import Image
-import io
-import pyocr
-import tkinter as tk
 import customtkinter as ctk
 import ScreenReadFile as sr
-import ScreenShowSentence as ss
-import ScreenShowImage as si
-# import ScreenTransition as st
-import ScreenOptionMarker as so
 import ScreenPDFFrame as sf
 import ScreenToolFrame as st
 
@@ -91,67 +80,21 @@ class Application(ctk.CTk):
 
   def set_ErrorText(self,text):
     self.toolFrame.errorText.set_Text(text)
+  
+  def initData(self):
+    # PDF情報の保持フィールド
+    # アプリ上で表示しているページ数を保持
+    self.page = 0
+    # PDFを画像変換した情報を保持
+    self.pdfImg = None
+    # PDFの総ページ数を格納するための変数
+    self.document_len = None
+    # PDFから抽出した文章をまとめているリスト
+    self.wordList = None
+    # 抽出された文章中からマーカーが引かれた位置をまとめるリスト
+    self.wordMarkerPosition = []
+    # 抽出された文字をまとめるリスト
+    self.wordMarkerList = []
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# class ScreenConfig:
-#   def __init__(self,title):
-#     self.title = title
-#     self.window = None
-
-#   def createScreen(self):
-#     layout =[
-#       [sg.Text(background_color="white",key="top")],
-#       [sg.Push(background_color="white"),sg.Text("ファイル",text_color="black",background_color="white",key="title"),sg.InputText(key="fileText"),sg.FileBrowse(button_text="ファイル選択",key="pdfFile"),sg.Button("表示する",key="decision"),sg.Push(background_color="white")],
-#       [
-#         sg.Text(background_color="gray",key="problemStatement"),
-#         sg.Image(data=None,key="IMAGE",background_color="white"),
-#       ]
-#     ]
-#     window = sg.Window(self.title,layout,background_color="white",resizable=True,finalize=True,size=(500,800))
-#     window.maximize()
-#     self.window = window
-
-#   def event_loop(self):
-#     pdfController = pdfFunc()
-    
-#     while True:
-#       event, values = self.window.read()
-#       if event == "decision":
-#         path = values["pdfFile"]
-#         pdfController.openPDF(path)
-#         img = pdfController.PDF_to_Image(30)
-#         pdfController.extractWord(img)
-#         #print(text)
-#         img.save("outputFile.png",format="png")
-#       elif event == sg.WIN_CLOSED:
-#         break
+    # オプションの状態を保持する変数
+    self.option = self.get_Option()
