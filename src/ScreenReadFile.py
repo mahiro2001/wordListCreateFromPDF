@@ -30,9 +30,6 @@ class ReadFileFrame(ctk.CTkFrame):
     self.another_button = ctk.CTkButton(self, text="開く",font=("meiryo", 12,"bold"),command=self.open_file_decision)
     self.another_button.grid(row=0, column=2)  # エクスプローラーの隣に配置
 
-    
-
-
   def open_file_explorer(self):
     # ファイルダイアログを開いて選択したファイルのパスを入力ボックスに設定
     file_path = filedialog.askopenfilename()

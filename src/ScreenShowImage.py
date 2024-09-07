@@ -10,6 +10,8 @@ class ShowImageFrame(ctk.CTkFrame):
     self.img = None
     self.grid_columnconfigure(0,weight=1)
     self.grid_rowconfigure(0,weight=1)
+    self.grid_propagate(False)
+
     self.scrollableFrame = ctk.CTkScrollableFrame(self)
     self.scrollableFrame.grid(row=0,column=0,sticky="news")
     self.imageLabel = ctk.CTkLabel(self.scrollableFrame,text="",image=None)
