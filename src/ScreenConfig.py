@@ -80,7 +80,8 @@ class Application(ctk.CTk):
   def get_Marker(self,nowPage):
     self.showSentence.getMarker_Word(nowPage)
 
-
+  def reconstruction_Marker(self,recPage):
+    self.showSentence.highLight_Marker_reconstruction(recPage)
 
 
 

@@ -29,6 +29,8 @@ class ToolTableFrame(ctk.CTkFrame):
       self.master.set_img(self.master.pdfImg[nextPage])
       # 取得した問題をレイアウト構成に基づいて表示する
       self.master.set_sentence(self.master.wordList[nextPage])
+      # 以前マーカーをしていた箇所にハイライトをつけるための処理
+      self.master.reconstruction_Marker(nextPage)
       
 
   def goBackPage(self):
@@ -44,3 +46,5 @@ class ToolTableFrame(ctk.CTkFrame):
       self.master.set_img(self.master.pdfImg[backPage])
       # 取得した問題をレイアウト構成に基づいて表示する
       self.master.set_sentence(self.master.wordList[backPage])
+      # 以前マーカーをしていた箇所にハイライトをつけるための処理
+      self.master.reconstruction_Marker(backPage)
