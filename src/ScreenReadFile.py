@@ -16,6 +16,7 @@ class ReadFileFrame(ctk.CTkFrame):
     self.grid_columnconfigure(0, weight=1)  # ファイルパスエントリーの列が拡張する
     self.grid_columnconfigure(1, weight=1)  # ボタンの列は固定
     self.grid_columnconfigure(2, weight=1)
+    self.grid_columnconfigure(3, weight=1)
     self.grid_rowconfigure(0,weight=1)
     
     # ファイルパス表示用のエントリー
@@ -29,6 +30,9 @@ class ReadFileFrame(ctk.CTkFrame):
     # 別のボタン
     self.another_button = ctk.CTkButton(self, text="開く",font=("meiryo", 12,"bold"),command=self.open_file_decision)
     self.another_button.grid(row=0, column=2)  # エクスプローラーの隣に配置
+
+    self.csv_output_button = ctk.CTkButton(self, text="単語リストを作成",font=("meiryo", 12,"bold"))
+    self.csv_output_button.grid(row=0, column=3,padx=(5,0))
 
   def open_file_explorer(self):
     # ファイルダイアログを開いて選択したファイルのパスを入力ボックスに設定
