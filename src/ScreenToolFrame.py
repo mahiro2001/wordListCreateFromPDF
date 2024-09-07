@@ -18,36 +18,28 @@ class ScreenToolFrame(ctk.CTkFrame):
     self.grid_rowconfigure(0,weight=1)
     self.grid_propagate(False)
 
-    self.undecided = su.ScreenUndecideFrame(master=self)
-    self.undecided.grid_propagate(False)
-    self.undecided.grid(row=0,column=0,padx=0,pady=0,sticky="news")
+    self.undecide = su.ScreenUndecideFrame(master=self)
+    self.undecide.grid(row=0,column=0,sticky="news")
 
-    self.undecided = su.ScreenUndecideFrame(master=self)
-    self.undecided.grid_propagate(False)
-    self.undecided.grid(row=0,column=1,padx=0,pady=0,sticky="news")
+    self.undecide = su.ScreenUndecideFrame(master=self)
+    self.undecide.grid(row=0,column=1,sticky="news")
 
-    self.undecided = su.ScreenUndecideFrame(master=self)
-    self.undecided.grid_propagate(False)
-    self.undecided.grid(row=0,column=2,padx=0,pady=0,sticky="news")
+    self.undecide = su.ScreenUndecideFrame(master=self)
+    self.undecide.grid(row=0,column=2,sticky="news")
 
-    self.undecided = su.ScreenUndecideFrame(master=self)
-    self.undecided.grid_propagate(False)
-    self.undecided.grid(row=0,column=3,padx=0,pady=0,sticky="news")
+    self.undecide = su.ScreenUndecideFrame(master=self)
+    self.undecide.grid(row=0,column=3,sticky="news")
 
-    self.undecided = su.ScreenUndecideFrame(master=self)
-    self.undecided.grid_propagate(False)
-    self.undecided.grid(row=0,column=4,padx=0,pady=0,sticky="news")
+    self.undecide = su.ScreenUndecideFrame(master=self)
+    self.undecide.grid(row=0,column=4,sticky="news")
 
-    self.undecided = su.ScreenUndecideFrame(master=self)
-    self.undecided.grid_propagate(False)
-    self.undecided.grid(row=0,column=5,padx=0,pady=0,sticky="news")
+    self.undecide = su.ScreenUndecideFrame(master=self)
+    self.undecide.grid(row=0,column=5,sticky="news")
 
     self.optionMenu = so.ScreenOptionFrame(master=self)
-    self.optionMenu.grid_propagate(False)
     self.optionMenu.grid(row=0,column=6,padx=0,pady=0,sticky="news")
 
     self.pageTransitionButton = st.ScreenTransitionFrame(master=self)
-    self.pageTransitionButton.grid_propagate(False)
     self.pageTransitionButton.grid(row=0,column=7,padx=0,pady=0,sticky="news")
     
     

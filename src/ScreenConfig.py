@@ -89,7 +89,8 @@ class Application(ctk.CTk):
   def get_Option(self):
     return self.option
 
-
+  def set_ErrorText(self,text):
+    self.toolFrame.errorText.set_Text(text)
 
 
 
