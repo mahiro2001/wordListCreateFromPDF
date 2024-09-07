@@ -39,7 +39,7 @@ class ReadFileFrame(ctk.CTkFrame):
 
   def open_file_explorer(self):
     # ファイルダイアログを開いて選択したファイルのパスを入力ボックスに設定
-    file_path = filedialog.askopenfilename(title="PDFファイルを選択")
+    file_path = filedialog.askopenfilename(title="PDFファイルを選択",filetypes=[("PDF files","*.pdf")])
     if file_path:
         self.file_path_entry.delete(0, tk.END)  # 既存のテキストを削除
         self.file_path_entry.insert(0, file_path)  # 新しいファイルパスを挿入
