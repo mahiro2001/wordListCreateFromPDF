@@ -2,6 +2,7 @@ from concurrent.futures import ProcessPoolExecutor
 import fitz
 from PIL import Image
 import io
+import customtkinter as ctk
 import pyocr
 
 # 【非同期処理】
@@ -46,7 +47,7 @@ def openPDF_top_document_len(path):
 # 【非同期処理関連】
 # 並行処理するためにpdfページの処理範囲を決めるための処理
 def division_page_top(document_len):
-  threadNum = 2
+  threadNum = 1
   avgPage = document_len / threadNum
   preNum = 0
   lenList = []
@@ -81,7 +82,7 @@ def extract_PageNum_AllList(resTuple):
   
   for textInfo in textList:
     reTextList.append(textInfo[1])
-  
+
   return reImgList,reTextList 
 
 
@@ -122,7 +123,59 @@ class pdfFunc():
     # 複数の非同期処理の結果を格納するためのリスト
     resList = []
     # 非同期処理、PDF_to_Image_topFuncメソッドを非同期で指定したページごとで処理を行う
-    with ProcessPoolExecutor(max_workers=2) as executor:
+    with ProcessPoolExecutor(max_workers=1) as executor:
       for divisionInfo in divisionList:
-        resList.append(executor.submit(PDF_to_Image_topFunc,divisionInfo,path))   
+        resList.append(executor.submit(PDF_to_Image_topFunc,divisionInfo,path))
     return extract_PageNum_AllList(union_List(resList))
+  
+# ==================================================================================================================
+# ==================================================================================================================
+# ==================================================================================================================
+# ==================================================================================================================
+
+  # 【同期処理】
+  # PDFデータを画像に変換するための処理
+  def PDF_to_Image(self,path):
+    # pdfを読みこむ
+    document = openPDF_top_document(path)
+    # 指定された開始・終了位置をそれぞれ格納
+    self.document_len = len(document)
+    # ページ番号と画像データをまとめたリストをさらにまとめるリスト[[ページ番号,画像データ],[ページ番号,画像データ]]
+    imgList = []
+    # 取得した画像データから文字を抽出し、格納するためのリスト
+    wordList = []
+    # 指定した範囲のpdfを画像に変換し、ページ数と画像データを紐づけ、リストに追加する
+    progress_dialog = ctk.CTkToplevel()
+    progress_dialog.grab_set()
+    progress_dialog.focus_set()
+    progress_dialog.title("読み込み中...")
+    progress_dialog.geometry("400x200+200+200")
+    progress_dialog.attributes("-topmost",True)
+    progress_dialog.grid_columnconfigure(0, weight=1)
+    progress_dialog.grid_rowconfigure(0,weight=1)
+    progress_dialog.grid_rowconfigure(1,weight=1)
+    progressbar = ctk.CTkProgressBar(progress_dialog,width=200,height=15)
+    progressbar.grid(row=0,column=0,sticky="ew",padx=30)
+    progressLabel = ctk.CTkLabel(progress_dialog,text=" ")
+    progressLabel.grid(row=1,column=0,sticky="news")
+    progressCount = 0
+    progressbar.set(0.0)
+    for page in range(self.document_len):
+      # pdfのページ情報と画像のバイナリデータを紐づける為のリスト[ページ番号,画像データ]
+      # pdfList = []
+      # textList = []
+      # pdfList.append(page)
+      # textList.append(page)
+      img = Image.open(io.BytesIO(document.get_page_pixmap(page,dpi=500).tobytes("png")))
+      text = extractWord(img)
+      # pdfList.append(img)
+      # textList.append(text)
+      imgList.append(img)
+      wordList.append(text)
+      progressCount += 1
+      progressLabel.configure(text=f"{progressCount}/{self.document_len}")
+      progressbar.set(progressCount/self.document_len)
+      progressbar.update()
+    # self.master.wait_window(progress_dialog)
+    progress_dialog.destroy()
+    return imgList,wordList
