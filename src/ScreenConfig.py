@@ -2,6 +2,7 @@ import customtkinter as ctk
 import ScreenReadFile as sr
 import ScreenPDFFrame as sf
 import ScreenToolFrame as st
+from PIL import Image, ImageTk
 
 FONT_TYPE = "meiryo"
 

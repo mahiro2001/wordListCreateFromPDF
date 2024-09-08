@@ -30,6 +30,7 @@ class ScreenTransitionFrame(ctk.CTkFrame):
         self.master.master.reconstruction_Marker(nextPage)
     else:
       error_dialog = ctk.CTkToplevel()
+      error_dialog.iconbitmap("favicon.ico")
       error_dialog.title("警告")
       error_dialog.geometry("300x100+500+400")
       error_dialog.attributes("-topmost",True)
@@ -58,6 +59,7 @@ class ScreenTransitionFrame(ctk.CTkFrame):
         self.master.master.reconstruction_Marker(backPage)
     else:
       error_dialog = ctk.CTkToplevel()
+      error_dialog.iconbitmap("favicon.ico")
       error_dialog.title("警告")
       error_dialog.geometry("300x100+500+400")
       error_dialog.attributes("-topmost",True)

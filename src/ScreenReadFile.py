@@ -48,7 +48,8 @@ class ReadFileFrame(ctk.CTkFrame):
       if self.master.document_len != 0:
         self.master.initData()
       # pdfから画像に変換する処理を並列で行う
-      mulitiProcess_resultTuple = pdfController.multiprocess_pdf_to_image(path) 
+      #mulitiProcess_resultTuple = pdfController.multiprocess_pdf_to_image(path) 
+      mulitiProcess_resultTuple = pdfController.PDF_to_Image(path)
       mulitiProcess_resultImgList, mulitiProcess_resultTextList = mulitiProcess_resultTuple    
       #pdfの総ページ数を管理側のdocument_lenに格納
       self.master.document_len = pdfController.document_len 
@@ -87,11 +88,12 @@ class ReadFileFrame(ctk.CTkFrame):
         with open(file_path, mode="w", newline="", encoding="Shift-JIS") as file:
           writer = csv.writer(file)
           writer.writerows(data)
+
         error_dialog = ctk.CTkToplevel()
         error_dialog.grab_set()
         error_dialog.focus_set()
-        error_dialog.title("警告")
-        error_dialog.geometry("800x400+500+400")
+        error_dialog.title("ダウンロード完了")
+        error_dialog.geometry("400x200+200+300")
         error_dialog.attributes("-topmost",True)
         error_dialog.grid_columnconfigure(0, weight=1)
         error_dialog.grid_rowconfigure(0,weight=1)
