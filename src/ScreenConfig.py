@@ -1,8 +1,10 @@
+import csv
+import zlib
 import customtkinter as ctk
 import ScreenReadFile as sr
 import ScreenPDFFrame as sf
 import ScreenToolFrame as st
-from PIL import Image, ImageTk
+import base64
 
 FONT_TYPE = "meiryo"
 
@@ -22,12 +24,9 @@ class Application(ctk.CTk):
     # PDF情報の保持フィールド
     # アプリ上で表示しているページ数を保持
     self.page = 0
-    # PDFを画像変換した情報を保持
-    self.pdfImg = None
     # PDFの総ページ数を格納するための変数
     self.document_len = None
     # PDFから抽出した文章をまとめているリスト
-    self.wordList = None
     # 抽出された文章中からマーカーが引かれた位置をまとめるリスト
     self.wordMarkerPosition = []
     # 抽出された文字をまとめるリスト
@@ -99,3 +98,20 @@ class Application(ctk.CTk):
 
     # オプションの状態を保持する変数
     self.option = self.get_Option()
+
+  # csvファイルから特定の行のデータを取得するための処理
+  def read_csv_to_List(self,file_path,page):
+    with open(file_path, mode="r", encoding="utf-8") as file:
+      reader = csv.reader(file)
+      for nowPage,data in enumerate(reader,start=1):
+        if nowPage == page+1:
+          return data
+  
+  # csvファイルから画像データのバイナリデータを読み出すための処理
+  def read_csv_to_List_Images(self,file_path,page):
+      with open(file_path, mode="r") as file:
+        reader = csv.reader(file)
+        for nowPage,data in enumerate(reader, start=1):
+          if nowPage == page+1:
+            compress_data = base64.b64decode(data[0])
+            return zlib.decompress(compress_data)

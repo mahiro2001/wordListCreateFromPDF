@@ -1,4 +1,6 @@
+import io
 import customtkinter as ctk
+from PIL import Image
 
 class ShowImageFrame(ctk.CTkFrame):
   def __init__(self,master, **kwargs):
@@ -18,6 +20,7 @@ class ShowImageFrame(ctk.CTkFrame):
 
   # 選択した画像をラベルに貼り付けて表示するための処理
   def updateImage(self,img):
+    img = Image.open(io.BytesIO(img))
     self.img = img
     w,h = img.size
     width = self.scrollableFrame.winfo_width()
