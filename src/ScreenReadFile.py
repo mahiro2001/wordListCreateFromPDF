@@ -4,6 +4,28 @@ import tkinter as tk
 import ScreenFunction as sf
 import csv
 import os
+import base64
+
+csv.field_size_limit(10**8)
+
+# csvファイルに出力するための処理（テキストデータ）
+def write_list_to_csv(file_path,data):
+  with open(file_path, mode="w", newline="", encoding="utf-8") as file:
+    writer = csv.writer(file)
+    writer.writerows(data)
+
+# csvファイルに出力するための処理（画像データ）
+def write_list_to_csv_images(file_path,data):
+  with open(file_path, mode="w",newline="") as file:
+    writer = csv.writer(file)
+    writer.writerows(data)
+
+# 画像データをBase64にエンコードするための処理
+def encode_base64_image(data):
+  imageData = []
+  for binaryData in data:
+    imageData.append(base64.b64encode(binaryData).decode("utf-8"))
+  return imageData
 
 class ReadFileFrame(ctk.CTkFrame):
   def __init__(self,master, **kwargs):
@@ -47,22 +69,27 @@ class ReadFileFrame(ctk.CTkFrame):
     if len(path) != 0:
       if self.master.document_len != 0:
         self.master.initData()
-      # pdfから画像に変換する処理を並列で行う
-      #mulitiProcess_resultTuple = pdfController.multiprocess_pdf_to_image(path) 
+      # pdfから画像に変換する処理を並列で行う 
       mulitiProcess_resultTuple = pdfController.PDF_to_Image(path)
-      mulitiProcess_resultImgList, mulitiProcess_resultTextList = mulitiProcess_resultTuple    
+      mulitiProcess_resultImgList, mulitiProcess_resultTextList = mulitiProcess_resultTuple
+      # 文章のテキストデータを2次元配列に変換
+      data = [[word] for word in mulitiProcess_resultTextList]
+      mulitiProcess_resultTextList = None
+      write_list_to_csv("wordList.csv",data)
+
       #pdfの総ページ数を管理側のdocument_lenに格納
       self.master.document_len = pdfController.document_len 
-      # 作成したリストをセットする
-      self.master.pdfImg = mulitiProcess_resultImgList
+      
+      # PDF画像を2次元配列に変換
+      imageData = [[img] for img in encode_base64_image(mulitiProcess_resultImgList)]
+      mulitiProcess_resultImgList = None
+      write_list_to_csv_images("imgList.csv",imageData)
+      
       # 取得した画像をレイアウト構成に基づいて表示する
-      self.master.set_img(mulitiProcess_resultImgList[0])
-      # # 取得した画像から文字を抽出し、レイアウト構成に基づいて表示する
-      # wordList = pdfController.extractWord(mulitiProcess_resultList)
-      # 作成した問題集をセットする
-      self.master.wordList = mulitiProcess_resultTextList
+      self.master.set_img(self.master.read_csv_to_List_Images("imgList.csv",0))
+      
       # 取得した問題集から1ページ目の文字を表示する
-      self.master.set_sentence(mulitiProcess_resultTextList[0])
+      self.master.set_sentence(self.master.read_csv_to_List("wordList.csv",0))
     else:
       error_dialog = ctk.CTkToplevel()
       error_dialog.grab_set()

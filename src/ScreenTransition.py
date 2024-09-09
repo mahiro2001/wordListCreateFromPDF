@@ -23,9 +23,9 @@ class ScreenTransitionFrame(ctk.CTkFrame):
         nextPage = nowPage + 1
         self.master.master.set_page(nextPage)
         # 取得した画像をレイアウト構成に基づいて表示する
-        self.master.master.set_img(self.master.master.pdfImg[nextPage])
+        self.master.master.set_img(self.master.master.read_csv_to_List_Images("imgList.csv",nextPage))
         # 取得した問題をレイアウト構成に基づいて表示する
-        self.master.master.set_sentence(self.master.master.wordList[nextPage])
+        self.master.master.set_sentence(self.master.master.read_csv_to_List("wordList.csv",nextPage))
         # 以前マーカーをしていた箇所にハイライトをつけるための処理
         self.master.master.reconstruction_Marker(nextPage)
     else:
@@ -52,9 +52,9 @@ class ScreenTransitionFrame(ctk.CTkFrame):
         backPage = nowPage - 1
         self.master.master.set_page(backPage)
         # 取得した画像をレイアウト構成に基づいて表示する
-        self.master.master.set_img(self.master.master.pdfImg[backPage])
+        self.master.master.set_img(self.master.master.read_csv_to_List_Images("imgList.csv",backPage))
         # 取得した問題をレイアウト構成に基づいて表示する
-        self.master.master.set_sentence(self.master.master.wordList[backPage])
+        self.master.master.set_sentence(self.master.master.read_csv_to_List("wordList.csv",backPage))
         # 以前マーカーをしていた箇所にハイライトをつけるための処理
         self.master.master.reconstruction_Marker(backPage)
     else:
