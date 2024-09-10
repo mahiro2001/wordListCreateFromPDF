@@ -20,12 +20,15 @@ class ScreenTransitionFrame(ctk.CTkFrame):
       nowPage = self.master.master.page
       # pdfの最大ページ数より現在のページが小さければ処理を行う
       if self.master.master.document_len - 1 > nowPage:
+        if self.master.master.text_change_flag:
+          self.master.master.call_csv_override(nowPage)
+          self.master.master.text_change_flag = False
         nextPage = nowPage + 1
         self.master.master.set_page(nextPage)
         # 取得した画像をレイアウト構成に基づいて表示する
-        self.master.master.set_img(self.master.master.read_csv_to_List_Images("imgList.csv",nextPage))
+        self.master.master.set_img(self.master.master.read_csv_to_List_Images(self.master.master.img_path,nextPage))
         # 取得した問題をレイアウト構成に基づいて表示する
-        self.master.master.set_sentence(self.master.master.read_csv_to_List("wordList.csv",nextPage))
+        self.master.master.set_sentence(self.master.master.read_csv_to_List(self.master.master.text_path,nextPage))
         # 以前マーカーをしていた箇所にハイライトをつけるための処理
         self.master.master.reconstruction_Marker(nextPage)
     else:
@@ -49,12 +52,15 @@ class ScreenTransitionFrame(ctk.CTkFrame):
       nowPage = self.master.master.page
       # pdfの最小のページ数より現在のページ数が大きければ処理を行う
       if nowPage > 0:
+        if self.master.master.text_change_flag:
+          self.master.master.call_csv_override(nowPage)
+          self.master.master.text_change_flag = False
         backPage = nowPage - 1
         self.master.master.set_page(backPage)
         # 取得した画像をレイアウト構成に基づいて表示する
-        self.master.master.set_img(self.master.master.read_csv_to_List_Images("imgList.csv",backPage))
+        self.master.master.set_img(self.master.master.read_csv_to_List_Images(self.master.master.img_path,backPage))
         # 取得した問題をレイアウト構成に基づいて表示する
-        self.master.master.set_sentence(self.master.master.read_csv_to_List("wordList.csv",backPage))
+        self.master.master.set_sentence(self.master.master.read_csv_to_List(self.master.master.text_path,backPage))
         # 以前マーカーをしていた箇所にハイライトをつけるための処理
         self.master.master.reconstruction_Marker(backPage)
     else:

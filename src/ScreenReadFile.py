@@ -1,3 +1,4 @@
+import tempfile
 import customtkinter as ctk
 from tkinter import filedialog
 import tkinter as tk
@@ -75,7 +76,10 @@ class ReadFileFrame(ctk.CTkFrame):
       # 文章のテキストデータを2次元配列に変換
       data = [[word] for word in mulitiProcess_resultTextList]
       mulitiProcess_resultTextList = None
-      write_list_to_csv("wordList.csv",data)
+      temp_text_csv_File = tempfile.NamedTemporaryFile(delete=False,mode="w",newline="",encoding="utf-8")
+      temp_text_Path = temp_text_csv_File.name
+      self.master.text_path = temp_text_Path
+      write_list_to_csv(temp_text_Path,data)
 
       #pdfの総ページ数を管理側のdocument_lenに格納
       self.master.document_len = pdfController.document_len 
@@ -83,13 +87,16 @@ class ReadFileFrame(ctk.CTkFrame):
       # PDF画像を2次元配列に変換
       imageData = [[img] for img in encode_base64_image(mulitiProcess_resultImgList)]
       mulitiProcess_resultImgList = None
-      write_list_to_csv_images("imgList.csv",imageData)
+      temp_img_csv_File = tempfile.NamedTemporaryFile(delete=False,mode="w",newline="")
+      temp_img_Path = temp_img_csv_File.name
+      self.master.img_path = temp_img_Path
+      write_list_to_csv_images(temp_img_Path,imageData)
       
       # 取得した画像をレイアウト構成に基づいて表示する
-      self.master.set_img(self.master.read_csv_to_List_Images("imgList.csv",0))
+      self.master.set_img(self.master.read_csv_to_List_Images(temp_img_Path,0))
       
       # 取得した問題集から1ページ目の文字を表示する
-      self.master.set_sentence(self.master.read_csv_to_List("wordList.csv",0))
+      self.master.set_sentence(self.master.read_csv_to_List(temp_text_Path,0))
     else:
       error_dialog = ctk.CTkToplevel()
       error_dialog.grab_set()
@@ -108,7 +115,7 @@ class ReadFileFrame(ctk.CTkFrame):
     data = self.master.wordMarkerList
     if len(data) != 0:
       file_path = os.path.normpath(filedialog.askdirectory(title="保存先を選択"))
-      if len(file_path) != 0:
+      if len(file_path) > 1:
         file_path = os.path.join(file_path,"createWordList.csv")
         # 2次元配列に変換
         data = [[word] for word in data]

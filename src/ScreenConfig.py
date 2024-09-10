@@ -26,11 +26,16 @@ class Application(ctk.CTk):
     self.page = 0
     # PDFの総ページ数を格納するための変数
     self.document_len = None
-    # PDFから抽出した文章をまとめているリスト
     # 抽出された文章中からマーカーが引かれた位置をまとめるリスト
     self.wordMarkerPosition = []
     # 抽出された文字をまとめるリスト
     self.wordMarkerList = []
+    # 抽出された文章を保存しているcsvファイルのパス情報
+    self.text_path = None
+    # 抽出された画像を保存しているcsvファイルのパス情報
+    self.img_path = None
+    # 文章に変更があるかを判断するためのフラグ
+    self.text_change_flag = False
 
     # オプションの状態を保持する変数
     self.option = "マーカー"
@@ -115,3 +120,8 @@ class Application(ctk.CTk):
           if nowPage == page+1:
             compress_data = base64.b64decode(data[0])
             return zlib.decompress(compress_data)
+          
+  # テキストボックス内の文章に変更があった場合の処理
+  # 変更箇所をcsvに上書きするための処理を呼び出す
+  def call_csv_override(self,page):
+    self.pdfFrame.sentence.text_csv_override(self.text_path,page)
