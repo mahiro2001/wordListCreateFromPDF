@@ -1,4 +1,3 @@
-import gc
 import zlib
 import fitz
 from PIL import Image
@@ -35,14 +34,6 @@ class pdfFunc():
   # 【同期処理】
   # PDFデータを画像に変換するための処理
   def PDF_to_Image(self,path):
-    # pdfを読みこむ
-    document = openPDF_top_document(path)
-    # 指定された開始・終了位置をそれぞれ格納
-    self.document_len = len(document)
-    # ページ番号と画像データをまとめたリストをさらにまとめるリスト[[ページ番号,画像データ],[ページ番号,画像データ]]
-    imgList = []
-    # 取得した画像データから文字を抽出し、格納するためのリスト
-    wordList = []
     # 指定した範囲のpdfを画像に変換し、ページ数と画像データを紐づけ、リストに追加する
     progress_dialog = ctk.CTkToplevel()
     progress_dialog.grab_set()
@@ -59,6 +50,14 @@ class pdfFunc():
     progressLabel.grid(row=1,column=0,sticky="news")
     progressCount = 0
     progressbar.set(0.0)
+    # pdfを読みこむ
+    document = openPDF_top_document(path)
+    # 指定された開始・終了位置をそれぞれ格納
+    self.document_len = len(document)
+    # ページ番号と画像データをまとめたリストをさらにまとめるリスト[[ページ番号,画像データ],[ページ番号,画像データ]]
+    imgList = []
+    # 取得した画像データから文字を抽出し、格納するためのリスト
+    wordList = []
     for page in range(self.document_len):
       img_binary = io.BytesIO(document.get_page_pixmap(page,dpi=500).tobytes("png"))
       img_binary_zip = zlib.compress(img_binary.getvalue())

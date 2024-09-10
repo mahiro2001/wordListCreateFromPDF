@@ -1,9 +1,13 @@
+import csv
 import customtkinter as ctk
+from tkinter import END
 
 class ShowSentenceFrame(ctk.CTkFrame):
   def __init__(self,master, **kwargs):
     super().__init__(master, **kwargs)
     self.master = master
+    self.change_flag_count = 0
+
     self.grid_rowconfigure(0,weight=1)
     self.grid_columnconfigure(0,weight=1)
     self.bind("<Configure>",self.delay_resize_textBox)
@@ -13,13 +17,38 @@ class ShowSentenceFrame(ctk.CTkFrame):
     self.sentence.grid(row=0, column=0, padx=7.5, pady=7.5,sticky="news")
     self.sentence.bind("<ButtonRelease-1>",self.highLight_Marker_Select)
     self.sentence.bind("<Button-1>",self.highLight_Marker_remove)
+    self.sentence.bind("<KeyRelease>",self.change_flag_text)
+
+  # 文字に変更があった場合の処理
+  def change_flag_text(self,event):
+    if self.change_flag_count == 0:
+      self.master.master.text_change_flag = True
+  
+  def text_csv_override(self,file_path,page):
+    with open(file_path, mode="r", encoding="utf-8") as file:
+      # テキスト情報格納しているcsvファイルを取得
+      reader = csv.reader(file)
+      # 変更した文章を代入するためにリスト化
+      reader = list(reader)
+      # 変更した文章をすべて取得してくる
+      temp_str = self.sentence.get("0.0",END)
+      # 変更した文章をリスト化する
+      temp = []
+      temp.append(temp_str)
+      # 変更したページの文章情報を上書きする
+      reader[page] = temp
+    # csvに上書きする
+    with open(file_path,mode="w",newline="",encoding="utf-8") as file:
+      writer = csv.writer(file)
+      writer.writerows(reader)
+        
 
   # 取得した文字をテキストボックスにセットするための処理
   def set_sentence_config(self,exText):
     self.sentence.configure(state="normal",fg_color="white",corner_radius=0)
     self.sentence.grid_configure(padx=7.5,pady=7.5)
     self.sentence.delete("0.0",ctk.END)
-    self.sentence.insert("0.0",exText)
+    self.sentence.insert("0.0",exText[0])
 
   # ウィンドウサイズに画像を変更する際の遅延処理
   def delay_resize_textBox(self,event):
